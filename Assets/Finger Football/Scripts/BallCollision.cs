@@ -8,10 +8,12 @@ namespace FingerFootball
     public class BallCollision : MonoBehaviour
     {
         private AudioSource ballHitSound;
+        private Rigidbody2D rb;
 
         private void Start()
         {
             ballHitSound = GameObject.Find("BallHitSound").GetComponent<AudioSource>();
+            rb = GetComponent<Rigidbody2D>();
         }
         private void OnCollisionEnter2D(Collision2D collision)
         {
@@ -36,9 +38,17 @@ namespace FingerFootball
                 GetComponent<SlowDownTheBall>().enabled = true;
                 if (PlayerPrefs.GetInt("Vibration") == 1)
                 {
-                    Handheld.Vibrate();
+                    //Handheld.Vibrate();
                 }
             }
+            /*
+            else if(rb.velocity == Vector2.zero)
+            {
+                PlayerPrefs.SetInt("NumberOfMisses", PlayerPrefs.GetInt("NumberOfMisses") + 1);
+                GameObject.Find("GameManager").GetComponent<InstantiateBall>().InstantiateNewBall();
+                Destroy(this.gameObject);
+            }
+            */
         }
     }
 }
