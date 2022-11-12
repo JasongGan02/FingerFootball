@@ -852,6 +852,10 @@
       <Project>{2b0fc4cb-5e00-215a-885e-171c731bd525}</Project>
       <Name>Unity.Services.Core.Editor</Name>
     </ProjectReference>
+    <ProjectReference Include="Unity.Settings.Editor.csproj">
+      <Project>{030541f8-7053-e5fd-7565-3d39a62ed279}</Project>
+      <Name>Unity.Settings.Editor</Name>
+    </ProjectReference>
     <ProjectReference Include="UnityEditor.UI.csproj">
       <Project>{49a30075-7e93-e218-b4a0-e61102ec45f5}</Project>
       <Name>UnityEditor.UI</Name>
