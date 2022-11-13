@@ -14,6 +14,11 @@ namespace FingerFootball
         private Rigidbody2D rb;
         private bool invertControls;
         private float topMenu;
+        private float pressedTime;
+        private bool isKeyActive = false;
+        private readonly Vector2 STOPPING_VELOCITY = new Vector2(0.01f,0.01f);
+        public float maxKickForce = 2000;
+        public float timeKickRatio = 1300;
 
         void Start()
         {
@@ -30,6 +35,7 @@ namespace FingerFootball
 
         void Update()
         {
+            
             if (Input.mousePosition.y > topMenu) return;//Not to react if the player touches the upper side of the screen (where pause button is located)
             if (Input.GetMouseButton(0))
             {
@@ -44,16 +50,24 @@ namespace FingerFootball
                 {
                     transform.localRotation = Quaternion.Euler(0, 0, Mathf.Rad2Deg * Mathf.Atan2(-py, -px));
                 }
+                
             }
-
-            if (Input.GetMouseButtonUp(0))
+            if (Input.GetMouseButton(0) && !isKeyActive)
+            {
+                pressedTime = Time.time;
+                isKeyActive = true;
+            }
+            if (Input.GetMouseButtonUp(0)&& isKeyActive)
             {
                 if (arrow == null) return;
                 if (!arrow.activeSelf) Destroy(this.gameObject);
-                rb.AddForce(transform.right * 1000);
+                float kickForce =  Mathf.Min((Time.time - pressedTime)*timeKickRatio+500, maxKickForce);
+                pressedTime = Time.time;
+                isKeyActive = false;
+                rb.AddForce(transform.right * kickForce);
                 Destroy(arrow);
             }
-
+            
             Vector2 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(worldPoint, Vector2.zero);
 
@@ -85,5 +99,7 @@ namespace FingerFootball
             if (arrow == null) return;
             arrow.SetActive(false);
         }
+
+
     }
 }

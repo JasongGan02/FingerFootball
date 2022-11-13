@@ -15,6 +15,7 @@ namespace FingerFootball
         void FixedUpdate()
         {
             rb.velocity = rb.velocity * Time.fixedDeltaTime * 90;
+            
         }
     }
 }

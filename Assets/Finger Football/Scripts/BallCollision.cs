@@ -21,6 +21,7 @@ namespace FingerFootball
             Vector2 contactsPos = collision.contacts[0].point;
             GameObject hitParticle = Instantiate(Resources.Load("HitParticle", typeof(GameObject))) as GameObject;
             hitParticle.transform.position = contactsPos;
+            rb.velocity = rb.velocity * 0.8f;
         }
 
         void OnTriggerEnter2D(Collider2D col)

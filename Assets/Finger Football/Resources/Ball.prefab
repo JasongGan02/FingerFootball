@@ -187,7 +187,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
+  m_LinearDrag: 0.17
   m_AngularDrag: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
@@ -225,6 +225,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   arrow: {fileID: 1314017884060923977}
   rb: {fileID: 1314017885037715885}
+  maxKickForce: 4000
+  timeKickRatio: 1300
 --- !u!114 &3221747107353734679
 MonoBehaviour:
   m_ObjectHideFlags: 0
