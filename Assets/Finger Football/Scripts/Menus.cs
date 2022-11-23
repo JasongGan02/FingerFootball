@@ -26,7 +26,7 @@ namespace FingerFootball
         public Slider audioSlider;
         private AudioSource buttonSound;
 
-        public Boolean aim;
+        public Boolean aim = false;
         void Start()
         {
             buttonSound = GameObject.Find("ButtonSound").GetComponent<AudioSource>();

@@ -10,7 +10,7 @@ namespace FingerFootball
 
         public Vector2 ballPosition;
         private float topMenu;
-
+        public Vector3 hitPos;
         void Start()
         {
             topMenu = Screen.height - Screen.height / 7;
@@ -18,9 +18,12 @@ namespace FingerFootball
         void Update()
         {
             if (Input.mousePosition.y > topMenu) return;//Not to react if the player touches the upper side of the screen (where pause button is located)
-            if (Input.GetMouseButtonDown(0)||Input.GetMouseButtonDown(1))
+            if (Input.GetMouseButtonDown(0) && !GameObject.Find("GameManager").GetComponent<Menus>().aim)
             {
-                
+                InstantiateNewBall();
+            }
+            if (GameObject.Find("Ball") == null && GameObject.Find("GameManager").GetComponent<Menus>().aim)
+            {
                 InstantiateNewBall();
             }
         }
