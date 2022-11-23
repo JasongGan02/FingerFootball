@@ -19,12 +19,14 @@ namespace FingerFootball
         public GameObject gameplayUI;
         public GameObject pauseMenuUI;
         public GameObject pauseButton;
+        public GameObject aimButton;
         public InstantiateBall instantiateBall;
         public Toggle invertControls;
         public Toggle vibration;
         public Slider audioSlider;
         private AudioSource buttonSound;
 
+        public Boolean aim;
         void Start()
         {
             buttonSound = GameObject.Find("ButtonSound").GetComponent<AudioSource>();
@@ -51,6 +53,12 @@ namespace FingerFootball
             {
                 vibration.isOn = true;
             }
+        }
+        
+        public void setAim()
+        {
+            aim = !aim;
+            Debug.Log(aim);
         }
 
         public void Volume()
@@ -234,6 +242,7 @@ namespace FingerFootball
             instantiateBall.enabled = false;
         }
 
+  
         public void LevelComplete()
         {
             int currentLevel = Int32.Parse(Vars.currentLevel);

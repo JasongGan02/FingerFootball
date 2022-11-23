@@ -18,8 +18,9 @@ namespace FingerFootball
         void Update()
         {
             if (Input.mousePosition.y > topMenu) return;//Not to react if the player touches the upper side of the screen (where pause button is located)
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0)||Input.GetMouseButtonDown(1))
             {
+                
                 InstantiateNewBall();
             }
         }

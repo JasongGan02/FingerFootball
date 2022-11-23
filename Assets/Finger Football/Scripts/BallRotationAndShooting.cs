@@ -11,6 +11,8 @@ namespace FingerFootball
         [SerializeField]
         private GameObject arrow;
         [SerializeField]
+        private GameObject AngleArrow;
+        [SerializeField]
         private Rigidbody2D rb;
         private bool invertControls;
         private float topMenu;
@@ -37,7 +39,7 @@ namespace FingerFootball
         {
             
             if (Input.mousePosition.y > topMenu) return;//Not to react if the player touches the upper side of the screen (where pause button is located)
-            if (Input.GetMouseButton(0))
+            if (Input.GetMouseButton(0)||Input.GetMouseButton(1))
             {
                 Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 float px = transform.position.x - mousePosition.x;
@@ -51,7 +53,23 @@ namespace FingerFootball
                     transform.localRotation = Quaternion.Euler(0, 0, Mathf.Rad2Deg * Mathf.Atan2(-py, -px));
                 }
                 
+                if(Input.GetMouseButton(1))
+                {
+                    
+                    ChangeShootAngle();
+                            
+                }
             }
+
+            
+            
+            if (Input.GetMouseButtonUp(0))
+            {
+                if (AngleArrow == null) return;
+                if (!AngleArrow.activeSelf) Destroy(this.gameObject);
+                Destroy(AngleArrow);
+            }
+            
             if (Input.GetMouseButton(0) && !isKeyActive)
             {
                 pressedTime = Time.time;
@@ -61,13 +79,19 @@ namespace FingerFootball
             {
                 if (arrow == null) return;
                 if (!arrow.activeSelf) Destroy(this.gameObject);
+                
                 float kickForce =  Mathf.Min((Time.time - pressedTime)*timeKickRatio+500, maxKickForce);
                 pressedTime = Time.time;
                 isKeyActive = false;
-                rb.AddForce(transform.right * kickForce);
+                Vector3 kickAdd = AngleArrow.transform.position;
+                Vector3 kickPos = transform.position + kickAdd;
+                Debug.Log(kickAdd);
+                Debug.Log(transform.position);
+                rb.AddForceAtPosition(transform.right * kickForce, kickPos);
+
                 Destroy(arrow);
+                
             }
-            
             Vector2 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(worldPoint, Vector2.zero);
 
@@ -87,17 +111,26 @@ namespace FingerFootball
             }
         }
 
+        private void ChangeShootAngle()
+        {
+            AngleArrow.transform.RotateAround(transform.position, new Vector3(0,0,1), 1);
+        }
+        
         private void EnableArrowObject()
         {
             if (arrow == null) return;
+            if (AngleArrow == null) return;
             if (!Input.GetMouseButton(0)) return;
             arrow.SetActive(true);
+            AngleArrow.SetActive(true);
         }
 
         private void DisableArrowObject()
         {
             if (arrow == null) return;
+            if (AngleArrow == null) return;
             arrow.SetActive(false);
+            AngleArrow.SetActive(false);
         }
 
 
