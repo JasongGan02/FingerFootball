@@ -155,6 +155,8 @@ namespace FingerFootball
             level.name = "Level";
             instantiateBall.enabled = true;
             instantiateBall.ballPosition = GameObject.Find("Ball").transform.position;
+            instantiateBall.hitPos = instantiateBall.ballPosition;
+            Debug.Log(instantiateBall.hitPos);
             mainMenuUI.SetActive(false);
             mainMenuScreen.SetActive(false);
             levelSelectUI.SetActive(false);
@@ -268,6 +270,7 @@ namespace FingerFootball
             if (GameObject.Find("Level") != null) Destroy(GameObject.Find("Level"));
             GameObject level = Instantiate(Resources.Load("Levels/Level" + Vars.currentLevel, typeof(GameObject))) as GameObject;
             instantiateBall.ballPosition = level.transform.Find("Ball").transform.position;
+            instantiateBall.hitPos = instantiateBall.ballPosition;
             instantiateBall.enabled = true;
             level.name = "Level";
             pauseButton.SetActive(true);

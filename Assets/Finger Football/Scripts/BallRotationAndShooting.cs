@@ -22,6 +22,8 @@ namespace FingerFootball
         public float maxKickForce = 2000;
         public float timeKickRatio = 1300;
         private bool aim;
+        private bool shot;
+        Vector3 kickPos;
         void Start()
         {
             if (PlayerPrefs.GetInt("InvertControls") == 0)//If player has set invert controles in the settings menu
@@ -33,7 +35,6 @@ namespace FingerFootball
                 invertControls = true;
             }
             topMenu = Screen.height - Screen.height / 7;
-            
         }
 
         void Update()
@@ -44,23 +45,19 @@ namespace FingerFootball
             {
                 if(transform.position.x != GameObject.Find("GameManager").GetComponent<InstantiateBall>().ballPosition.x &&transform.position.y != GameObject.Find("GameManager").GetComponent<InstantiateBall>().ballPosition.y) 
                 {
-                    //GameObject.Find("GameManager").GetComponent<InstantiateBall>().InstantiateNewBall();
                     Destroy(this.gameObject);
                 }
-
                 EnableAngleArrowObject();
-                if(Input.GetMouseButton(1))
+                if(Input.GetMouseButton(0))
                 {
                     ChangeShootAngle();  
                 }
-                if(Input.GetMouseButtonUp(1))
+                if(Input.GetMouseButtonUp(0))
                 {
                     GameObject.Find("GameManager").GetComponent<InstantiateBall>().hitPos = AngleArrow.transform.position;
                     AngleArrow.transform.localPosition = new Vector3(-0.218f,0,0);
                     AngleArrow.transform.localRotation = Quaternion.Euler(0, 0,90);
                     DisableAngleArrowObject();
-                    //if (AngleArrow == null) return;
-                    //Destroy(AngleArrow);
                 }
                 
                 
@@ -108,43 +105,52 @@ namespace FingerFootball
                     Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     float px = transform.position.x - mousePosition.x;
                     float py = transform.position.y - mousePosition.y;
-                    rad = Mathf.Atan2(py, px)+Mathf.PI/2;
-                    Vector3 kickPos = GameObject.Find("GameManager").GetComponent<InstantiateBall>().hitPos;
-                    Debug.Log(rad);
-                    kickPos = new Vector3(kickPos.x*Mathf.Cos(rad)-kickPos.y*Mathf.Sin(rad), kickPos.y*Mathf.Cos(rad)-kickPos.x*Mathf.Sin(rad));
-                    Debug.Log(transform.position +" kickPos: " + kickPos);
-                    GameObject.Find("GameManager").GetComponent<InstantiateBall>().hitPos = transform.position;
-                    Debug.Log(transform.right);
-                    rb.AddForceAtPosition(transform.right * kickForce, kickPos);
+                    rad = 2*Mathf.PI-(Mathf.Atan2(py, px)+Mathf.PI/2);
+                    //Debug.Log("HitPos "+ GameObject.Find("GameManager").GetComponent<InstantiateBall>().hitPos);
+                    Vector3 hitPos = GameObject.Find("GameManager").GetComponent<InstantiateBall>().hitPos - transform.position;
+                    //Debug.Log("Rad: "+ rad);
                     
+                    kickPos = new Vector3(hitPos.x*Mathf.Cos(rad)+hitPos.y*Mathf.Sin(rad), hitPos.y*Mathf.Cos(rad)-hitPos.x*Mathf.Sin(rad), 0);
+                    kickPos += transform.position;
+                    //Debug.Log(transform.position +" kickPos: " + kickPos);
+                    //GameObject.Find("GameManager").GetComponent<InstantiateBall>().hitPos = transform.position;
+                    Debug.Log("Impulse kg*m/sec "+ transform.right * kickForce/100/2.6f);
+                    rb.AddForceAtPosition(transform.right * kickForce/100/2.6f, kickPos, ForceMode2D.Impulse);
+                    
+                    //rb.AddForce();
                     
                     
                     //Debug.Log(AngleArrow.transform.position);
-                    //Debug.Log(transform.position);
-                    
-
+                    //Debug.Log(transform.right * kickForce);
+                    shot = true;
                     Destroy(arrow);
                     
                 }
             }
             //Debug.Log(rb.angularVelocity);
-            
+            if(shot)
+            {
+                Debug.Log(rb.velocity);
+                shot = false;
+            }
+                
             Vector2 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(worldPoint, Vector2.zero);
 
-            if (hit.collider == null)
+            if (hit.collider == null && !aim)
             {
                 EnableArrowObject();
                 return;
             }
 
-            if (hit.collider.name == "Ball")
+            if (!aim && hit.collider.name == "Ball")
             {
                 DisableArrowObject();
             }
-            else
+            else 
             {
-                EnableArrowObject();
+                if(!aim)
+                    EnableArrowObject();
             }
         }
 
@@ -153,7 +159,7 @@ namespace FingerFootball
             if(AngleArrow.transform.localPosition.x > 0.21f) return;
           
             AngleArrow.transform.RotateAround(transform.position, new Vector3(0,0,1), 0.5f);
-            Debug.Log(AngleArrow.transform.rotation);
+            //Debug.Log(AngleArrow.transform.rotation);
         }
         
         private void EnableArrowObject()
@@ -166,7 +172,7 @@ namespace FingerFootball
         private void EnableAngleArrowObject()
         {
             if (AngleArrow == null) return;
-            if (!Input.GetMouseButton(1)) return;
+            if (!Input.GetMouseButton(0)) return;
             AngleArrow.SetActive(true);
         }
 
