@@ -114,7 +114,7 @@ namespace FingerFootball
                     kickPos += transform.position;
                     //Debug.Log(transform.position +" kickPos: " + kickPos);
                     //GameObject.Find("GameManager").GetComponent<InstantiateBall>().hitPos = transform.position;
-                    rb.AddForceAtPosition(transform.right * kickForce/100/2.6f, kickPos, ForceMode2D.Impulse);
+                    rb.AddForceAtPosition(transform.right * kickForce/100, kickPos, ForceMode2D.Impulse);
                     
                     //rb.AddForce();
                     
