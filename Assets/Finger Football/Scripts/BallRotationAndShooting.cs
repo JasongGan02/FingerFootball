@@ -55,7 +55,7 @@ namespace FingerFootball
                 if(Input.GetMouseButtonUp(0))
                 {
                     GameObject.Find("GameManager").GetComponent<InstantiateBall>().hitPos = AngleArrow.transform.position;
-                    AngleArrow.transform.localPosition = new Vector3(-0.218f,0,0);
+                    AngleArrow.transform.localPosition = new Vector3(-0.21f,0,0);
                     AngleArrow.transform.localRotation = Quaternion.Euler(0, 0,90);
                     DisableAngleArrowObject();
                 }
@@ -114,7 +114,6 @@ namespace FingerFootball
                     kickPos += transform.position;
                     //Debug.Log(transform.position +" kickPos: " + kickPos);
                     //GameObject.Find("GameManager").GetComponent<InstantiateBall>().hitPos = transform.position;
-                    Debug.Log("Impulse kg*m/sec "+ transform.right * kickForce/100/2.6f);
                     rb.AddForceAtPosition(transform.right * kickForce/100/2.6f, kickPos, ForceMode2D.Impulse);
                     
                     //rb.AddForce();
@@ -156,9 +155,12 @@ namespace FingerFootball
 
         private void ChangeShootAngle()
         {
-            if(AngleArrow.transform.localPosition.x > 0.21f) return;
-          
-            AngleArrow.transform.RotateAround(transform.position, new Vector3(0,0,1), 0.5f);
+            if(AngleArrow.transform.localPosition.x > 0.15f) 
+            {
+                Debug.Log(AngleArrow.transform.localPosition.y);
+                return;
+            }
+            AngleArrow.transform.RotateAround(transform.position, new Vector3(0,0,1), 80f*Time.deltaTime);
             //Debug.Log(AngleArrow.transform.rotation);
         }
         
